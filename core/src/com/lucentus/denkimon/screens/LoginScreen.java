@@ -1,40 +1,31 @@
 package com.lucentus.denkimon.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lucentus.denkimon.Denkimon;
 
 /**
- * The Main Title Screen for the Denkimon game
- * Allows users to login once interacted with
+ * The Log-In Screen
+ * Allows a user to either Login or Register with a username and password
  */
-public class TitleScreen implements Screen {
+public class LoginScreen implements Screen {
 
     // Properties
     private final Denkimon game;
     private OrthographicCamera camera;
 
+
     /*
      * Constructors
      */
-
-    /**
-     * Main constructor to initialize camera for this screen
-     * @param game the main game class
-     */
-    public TitleScreen(final Denkimon game) {
+    public LoginScreen(final Denkimon game) {
         this.game = game;
 
+        // Initialize the camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Denkimon.VIEWPORT_WIDTH, Denkimon.VIEWPORT_HEIGHT);
     }
-
-
-    /*
-     * Override Methods
-     */
 
     @Override
     public void show() { }
@@ -44,16 +35,6 @@ public class TitleScreen implements Screen {
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         camera.update();
-        game.batch.begin();
-        game.font.draw(game.batch, "DENKIMON", 100, Denkimon.VIEWPORT_HEIGHT - 200);
-        game.font.draw(game.batch, "Touch Anywhere to Begin", 100, Denkimon.VIEWPORT_HEIGHT - 300);
-        game.batch.end();
-
-        // Once the title screen is interacted with, go to the Log In Screen
-        if (Gdx.input.isTouched()) {
-            game.setScreen(new LoginScreen(game));
-            dispose();
-        }
     }
 
     @Override
