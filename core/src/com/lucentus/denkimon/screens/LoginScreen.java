@@ -9,7 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.lucentus.denkimon.Denkimon;
+import com.lucentus.denkimon.servers.LoginServer;
 
+import java.net.InetAddress;
 import java.net.Socket;
 
 
@@ -31,7 +33,9 @@ public class LoginScreen implements Screen {
     private Stage stage;
     private Table table;
 
+    private Label usernameLabel;
     private TextField usernameField;
+    private Label passwordLabel;
     private TextField passwordField;
 
     private TextButton loginButton;
@@ -66,8 +70,6 @@ public class LoginScreen implements Screen {
 
         // TODO: Add text boxes for username and password input
 
-        // usernameField = new TextField("Username", skin);
-        // passwordField = new TextField("Password", skin);
 
         // Add buttons
         // Create the style that will be used for both buttons
@@ -87,9 +89,16 @@ public class LoginScreen implements Screen {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 // TODO: Connect to server
+                try {
+                    InetAddress host = InetAddress.getLocalHost();
+                    game.loginSocket = new Socket(host.getHostName(), LoginServer.PORT);
 
-                // Temporarily will just take us to the home screen
-                game.setScreen(new HomeScreen(game));
+                    // If the information matches up, take the user to the main home screen
+                    game.setScreen(new HomeScreen(game));
+
+                } catch(Exception e) {
+                    System.out.println("Error connecting to login server occurred:\n" + e.getMessage());
+                }
             }
         });
 
@@ -101,9 +110,12 @@ public class LoginScreen implements Screen {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 // TODO: Connect to server
-
-                // Temporarily will just take us to the home screen
-                game.setScreen(new HomeScreen(game));
+                try {
+                    // Temporarily will just take us to the home screen
+                    game.setScreen(new HomeScreen(game));
+                } catch (Exception e) {
+                    System.out.println("Error connecting to login server occurred:\n" + e.getMessage());
+                }
             }
         });
 
@@ -148,5 +160,6 @@ public class LoginScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        skin.dispose();
     }
 }
