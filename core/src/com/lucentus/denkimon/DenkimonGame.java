@@ -1,20 +1,19 @@
 package com.lucentus.denkimon;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.lucentus.denkimon.screens.MenuScreen;
+import com.lucentus.denkimon.screens.TitleScreen;
+
+import java.net.Socket;
 
 
 /**
  * Main Game Class
  * Holds necessary variables and begins program by calling main menu screen
  */
-public class Denkimon extends Game {
+public class DenkimonGame extends Game {
 
 	/*
 	 * Static Class Members
@@ -30,6 +29,10 @@ public class Denkimon extends Game {
 	public SpriteBatch batch;
 	public BitmapFont font;
 
+	// Socket variables
+	public Socket loginSocket;
+	public Socket gameSocket;
+
 
 	/*
 	 * Override Methods
@@ -42,7 +45,7 @@ public class Denkimon extends Game {
 		font = new BitmapFont();
 
 		// Set the main menu screen
-		this.setScreen(new MenuScreen());
+		this.setScreen(new TitleScreen(this));
 	}
 
 	@Override

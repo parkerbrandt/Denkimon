@@ -2,7 +2,6 @@ package com.lucentus.denkimon;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.lucentus.denkimon.Denkimon;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 
@@ -33,6 +32,6 @@ public class DesktopLauncher {
 		config.setWindowedMode(WINDOW_WIDTH, WINDOW_HEIGHT);
 		config.useVsync(true);
 		config.setForegroundFPS(60);
-		new Lwjgl3Application(new Denkimon(), config);
+		new Lwjgl3Application(new DenkimonGame(), config);
 	}
 }
