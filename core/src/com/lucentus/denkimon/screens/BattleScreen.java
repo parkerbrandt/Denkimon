@@ -2,7 +2,9 @@ package com.lucentus.denkimon.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lucentus.denkimon.DenkimonGame;
 import com.lucentus.denkimon.entities.Denkimon;
@@ -16,6 +18,18 @@ import com.lucentus.denkimon.users.Player;
  */
 public class BattleScreen implements Screen {
 
+    // Static Properties
+    public static final int GRID_WIDTH = 5;
+    public static final int GRID_HEIGHT = 5;
+
+    // Enumerations
+    private enum BATTLE_PHASE {
+        START,
+        PLACEMENT,
+        FIGHT,
+        REWARDS
+    };
+
     // Properties
     private final DenkimonGame game;
 
@@ -24,6 +38,8 @@ public class BattleScreen implements Screen {
 
     private Player bluePlayer;
     private Player redPlayer;
+
+    private BATTLE_PHASE currentPhase = BATTLE_PHASE.START;
 
     private Denkimon[][] battleField = new Denkimon[5][5];
 
@@ -111,7 +127,20 @@ public class BattleScreen implements Screen {
      * Draw a grid of squares to represent the Denkimon on the battlefield
      */
     private void drawBattlefield() {
+        // Divide the viewport area into a grid
+        float square_width = (float) DenkimonGame.VIEWPORT_WIDTH / GRID_WIDTH;
+        float square_height = (float) DenkimonGame.VIEWPORT_HEIGHT / GRID_HEIGHT;
 
+        game.shape.begin(ShapeRenderer.ShapeType.Line);
+        game.shape.setColor(Color.GRAY);
+
+        for(int i = 0; i < GRID_WIDTH; i++) {
+            for (int j = 0; j < GRID_HEIGHT; j++) {
+                game.shape.rect(i * square_width, j * square_height, square_width, square_height);
+            }
+        }
+
+        game.shape.end();
     }
 
 
