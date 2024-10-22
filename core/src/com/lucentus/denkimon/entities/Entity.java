@@ -30,6 +30,12 @@ public abstract class Entity {
      */
     public abstract void render();
 
+    public abstract void onAttack();
+
+    public abstract void onHit();
+
+    public abstract void onMove();
+
 
     /*
      * Methods
