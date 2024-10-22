@@ -2,11 +2,13 @@ package com.lucentus.denkimon.entities;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.lucentus.denkimon.DenkimonGame;
-import jdk.net.SocketFlow;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+
 
 /**
  * Class to represent each Denkimon
@@ -22,14 +24,31 @@ public class Denkimon extends Entity {
     };
 
     public enum TYPE {
-        BLANK,
-        SHOCK
+        FIRE,
+        EARTH,
+        NATURE,
+        HYDRO,
+        SHOCK,
+        BLANK
     };
 
 
     /*
      * Static Properties
      */
+    private static final String DENKIMON_STAT_FILE = "stats/denkimon_stats.csv";
+
+    private static final String IDLE_SHEET = "";
+    private static final int IDLE_COLS = 0;
+    private static final int IDLE_ROWS = 0;
+
+    private static final String MOVE_SHEET = "";
+    private static final int MOVE_COLS = 0;
+    private static final int MOVE_ROWS = 0;
+
+    private static final String ATTACK_SHEET = "";
+    private static final int ATTACK_COLS = 0;
+    private static final int ATTACK_ROWS = 0;
 
 
     /*
@@ -37,16 +56,25 @@ public class Denkimon extends Entity {
      */
     private final DenkimonGame game;
 
+    // Stat Properties
     private String name;
 
-    private TYPE type;
-    private int maxHealthPoints;
-    private int currentHealthPoints;
-    private int atkDamage;
-    private float resist;
-    private int range;
+    private TYPE type =             TYPE.BLANK;
+    private STATUS currentStatus =  STATUS.ALIVE;
 
-    private STATUS currentStatus = STATUS.ALIVE;
+    private double maxHealthPoints;
+    private double currentHealthPoints;
+    private double atkDamage;
+    private double resist;
+    private double range;
+
+    // Animation properties
+    private Animation<TextureRegion> currentAnimation;
+    private String currentAnimationName;
+
+    private Animation<TextureRegion> idleAnimation;
+    private Animation<TextureRegion> moveAnimation;
+    private Animation<TextureRegion> attackAnimation;
 
 
     /*
@@ -58,9 +86,21 @@ public class Denkimon extends Entity {
      * @param name the name of the Denkimon
      */
     public Denkimon(final DenkimonGame game, String name) {
+
+        // Initialize variables
         this.game = game;
         this.name = name;
+
+        // Load all stats from the CSV file
         loadDenkimonInfo(name);
+
+        // Load all animations
+        this.idleAnimation = loadAnimation(IDLE_SHEET, IDLE_COLS, IDLE_ROWS);
+        this.moveAnimation = loadAnimation(MOVE_SHEET, MOVE_COLS, MOVE_ROWS);
+        this.attackAnimation = loadAnimation(ATTACK_SHEET, ATTACK_COLS, ATTACK_ROWS);
+
+        this.currentAnimation = idleAnimation;
+        this.currentAnimationName = "idle";
     }
 
 
@@ -76,9 +116,7 @@ public class Denkimon extends Entity {
     private void loadDenkimonInfo(String name) {
 
         try {
-            String filename = "";
-
-            BufferedReader reader = new BufferedReader(new FileReader(String.valueOf(Gdx.files.internal(filename))));
+            BufferedReader reader = new BufferedReader(new FileReader(String.valueOf(Gdx.files.internal(DENKIMON_STAT_FILE))));
             String line = "";
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
@@ -127,6 +165,7 @@ public class Denkimon extends Entity {
     /*
      * Getters & Setters
      */
+
     public Denkimon.STATUS getStatus() {
         return this.currentStatus;
     }
