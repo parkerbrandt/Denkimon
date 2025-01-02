@@ -4,11 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.lucentus.denkimon.Denkimon;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.lucentus.denkimon.DenkimonGame;
 
+import java.io.IOException;
 import java.net.Socket;
 
 
@@ -20,7 +24,7 @@ import java.net.Socket;
 public class HomeScreen implements Screen {
 
     // Properties
-    private final Denkimon game;
+    private final DenkimonGame game;
     private OrthographicCamera camera;
 
     // Socket Properties
@@ -29,15 +33,24 @@ public class HomeScreen implements Screen {
     // UI Properties
     private Skin skin;
     private Stage stage;
+    private Table displayTable;
+    private Table partyTable;
+    private Table startTable;
     private Table table;
+
+    private TextButton playButton;
+    private TextButton editPartyButton;
 
 
     /*
      * Constructors
      */
 
-    public HomeScreen(final Denkimon game) {
+    public HomeScreen(final DenkimonGame game) throws IOException {
         this.game = game;
+
+        // Initialize the main game server connection
+        game.gameSocket = new Socket();
 
         // Initialize Scene2d UI components
         stage = new Stage();
@@ -49,12 +62,30 @@ public class HomeScreen implements Screen {
         table.setDebug(true);
 
         // Initialize skin components
-        skin = new Skin();
+        skin = new Skin(Gdx.files.internal("assets/skins/beta/uiskin.json"));
+
+        editPartyButton = new TextButton("Edit Party", skin);
+        table.add(editPartyButton);
+        editPartyButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                // TODO: Bring up a pop-up allowing the user to change their party
+            }
+        });
+
+        playButton = new TextButton("Play", skin);
+        table.add(playButton);
+        playButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                game.setScreen(new BattleScreen(game));
+            }
+        });
     }
 
 
     /*
-     * Override Methods
+     * GDX Override Methods
      */
 
     @Override
@@ -95,4 +126,6 @@ public class HomeScreen implements Screen {
         stage.dispose();
         skin.dispose();
     }
+
+
 }

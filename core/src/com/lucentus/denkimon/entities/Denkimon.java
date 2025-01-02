@@ -15,6 +15,12 @@ import java.io.FileReader;
  */
 public class Denkimon extends Entity {
 
+    /*
+     * Class Properties
+     */
+    public static final int DENKIMON_SIZE = 64;
+
+
     /**
      * Represent the current status of the denkimon
      */
@@ -29,6 +35,7 @@ public class Denkimon extends Entity {
         NATURE,
         HYDRO,
         SHOCK,
+        MACHINE,
         BLANK
     };
 

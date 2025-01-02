@@ -10,9 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.lucentus.denkimon.Denkimon;
+import com.lucentus.denkimon.DenkimonGame;
 import com.lucentus.denkimon.servers.LoginServer;
-import com.sun.corba.se.pept.encoding.OutputObject;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -27,7 +26,7 @@ import java.net.Socket;
 public class LoginScreen implements Screen {
 
     // Properties
-    private final Denkimon game;
+    private final DenkimonGame game;
     private OrthographicCamera camera;
 
     // Socket Properties
@@ -51,7 +50,7 @@ public class LoginScreen implements Screen {
     /*
      * Constructors
      */
-    public LoginScreen(final Denkimon game) {
+    public LoginScreen(final DenkimonGame game) {
         this.game = game;
 
         // Initialize Scene2d UI components
@@ -60,7 +59,7 @@ public class LoginScreen implements Screen {
 
         table = new Table();
         stage.addActor(table);
-        table.setSize(Denkimon.VIEWPORT_WIDTH, Denkimon.VIEWPORT_HEIGHT / 2.0f);
+        table.setSize(DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT / 2.0f);
         table.align(Align.center);
         table.setDebug(true);
 

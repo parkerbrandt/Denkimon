@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.lucentus.denkimon.Denkimon;
+import com.lucentus.denkimon.DenkimonGame;
 
 /**
  * The Main Title Screen for the Denkimon game
@@ -13,7 +13,7 @@ import com.lucentus.denkimon.Denkimon;
 public class TitleScreen implements Screen {
 
     // Properties
-    private final Denkimon game;
+    private final DenkimonGame game;
     private OrthographicCamera camera;
 
     /*
@@ -24,11 +24,11 @@ public class TitleScreen implements Screen {
      * Main constructor to initialize camera for this screen
      * @param game the main game class
      */
-    public TitleScreen(final Denkimon game) {
+    public TitleScreen(final DenkimonGame game) {
         this.game = game;
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Denkimon.VIEWPORT_WIDTH, Denkimon.VIEWPORT_HEIGHT);
+        camera.setToOrtho(false, DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);
     }
 
 
@@ -45,13 +45,14 @@ public class TitleScreen implements Screen {
 
         camera.update();
         game.batch.begin();
-        game.font.draw(game.batch, "DENKIMON", 100, Denkimon.VIEWPORT_HEIGHT - 200);
-        game.font.draw(game.batch, "Touch Anywhere to Begin", 100, Denkimon.VIEWPORT_HEIGHT - 300);
+        game.font.draw(game.batch, "DENKIMON", 100, DenkimonGame.VIEWPORT_HEIGHT - 200);
+        game.font.draw(game.batch, "Touch Anywhere to Begin", 100, DenkimonGame.VIEWPORT_HEIGHT - 300);
         game.batch.end();
 
         // Once the title screen is interacted with, go to the Log In Screen
+        // TODO: Switch back to login screen once battle screen is completed
         if (Gdx.input.isTouched()) {
-            game.setScreen(new LoginScreen(game));
+            game.setScreen(new BattleScreen(game));
             dispose();
         }
     }

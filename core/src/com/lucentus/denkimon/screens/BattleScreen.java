@@ -54,6 +54,8 @@ public class BattleScreen implements Screen {
 
     public BattleScreen(final DenkimonGame game, Player bluePlayer, Player redPlayer) {
         this.game = game;
+        this.bluePlayer = bluePlayer;
+        this.redPlayer = redPlayer;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);
@@ -87,8 +89,14 @@ public class BattleScreen implements Screen {
         drawBattlefield();
 
         // TODO: Render each of the Blue Player's Denkimon
+        for (Denkimon denkimon : bluePlayer.getDenkimon()) {
+
+        }
 
         // TODO: Render each of the Red Player's Denkimon
+        for (Denkimon denkimon : redPlayer.getDenkimon()) {
+
+        }
 
         game.batch.end();
     }
@@ -127,6 +135,7 @@ public class BattleScreen implements Screen {
      * Draw a grid of squares to represent the Denkimon on the battlefield
      */
     private void drawBattlefield() {
+
         // Divide the viewport area into a grid
         float square_width = (float) DenkimonGame.VIEWPORT_WIDTH / GRID_WIDTH;
         float square_height = (float) DenkimonGame.VIEWPORT_HEIGHT / GRID_HEIGHT;
@@ -134,9 +143,10 @@ public class BattleScreen implements Screen {
         game.shape.begin(ShapeRenderer.ShapeType.Line);
         game.shape.setColor(Color.GRAY);
 
+        // TODO: Draw a grid of squares for the battlefield
         for(int i = 0; i < GRID_WIDTH; i++) {
             for (int j = 0; j < GRID_HEIGHT; j++) {
-                game.shape.rect(i * square_width, j * square_height, square_width, square_height);
+                game.shape.rect(i * square_width / 2, j * square_height / 2, square_width, square_height);
             }
         }
 
