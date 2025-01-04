@@ -19,8 +19,8 @@ import com.lucentus.denkimon.users.Player;
 public class BattleScreen implements Screen {
 
     // Static Properties
-    public static final int GRID_WIDTH = 5;
-    public static final int GRID_HEIGHT = 5;
+    public static final int GRID_WIDTH = 8;
+    public static final int GRID_HEIGHT = 4;
 
     // Enumerations
     private enum BATTLE_PHASE {
@@ -37,9 +37,14 @@ public class BattleScreen implements Screen {
     private float stateTime;
 
     private Player bluePlayer;
-    private Player redPlayer;
+    private String bluePlayerName = "Blue";
+    private int bluePlayerScore = 0;
 
-    private BATTLE_PHASE currentPhase = BATTLE_PHASE.START;
+    private Player redPlayer;
+    private String redPlayerName = "Red";
+    private int redPlayerScore = 0;
+
+    private BATTLE_PHASE currentPhase = BATTLE_PHASE.PLANNING;
 
     private Denkimon[][] battleField = new Denkimon[5][5];
 
@@ -84,24 +89,14 @@ public class BattleScreen implements Screen {
         // Update camera
         camera.update();
 
-
-        game.batch.setProjectionMatrix(camera.combined);
-        game.batch.begin();
+        // Render the scoreboard at the top of the screen
+        drawScoreboard();
 
         // Render the battlefield
         drawBattlefield();
 
-        // TODO: Render each of the Blue Player's Denkimon
-//        for (Denkimon denkimon : bluePlayer.getDenkimon()) {
-//
-//        }
-//
-//        // TODO: Render each of the Red Player's Denkimon
-//        for (Denkimon denkimon : redPlayer.getDenkimon()) {
-//
-//        }
+        // TODO: Render the players and their Denkimon
 
-        game.batch.end();
     }
 
     @Override
@@ -135,15 +130,61 @@ public class BattleScreen implements Screen {
      */
 
     /**
+     * Draw the scoreboard at the top of the screen
+     */
+    private void drawScoreboard() {
+
+        double width = DenkimonGame.VIEWPORT_WIDTH;
+        double height = DenkimonGame.VIEWPORT_HEIGHT;
+
+        game.batch.setProjectionMatrix(camera.combined);
+        game.batch.begin();
+
+        // Write each player's score above their side
+        game.font.draw(game.batch, bluePlayerName + "'s Score: " + bluePlayerScore, (int) (0.1 * width), (int) (0.9 * height));
+        game.font.draw(game.batch, redPlayerName + "'s Score: " + redPlayerScore, (int) (width - 0.1 * width), (int) (0.9 * height));
+
+        // Write the current phase at the top of the screen
+        switch (currentPhase) {
+            case START:
+                game.font.draw(game.batch, "GAME START", (int) (0.45 * width), (int) (0.9 * height));
+                break;
+
+            case PLANNING:
+                String displayStr = "PLANNING PHASE";
+                game.font.draw(game.batch, displayStr, (int) (0.5 * width - displayStr.length()), (int) (0.9 * height));
+                break;
+
+            case FIGHT:
+                game.font.draw(game.batch, "BATTLE PHASE", (int) (0.45 * width), (int) (0.9 * height));
+                break;
+
+            case REWARDS:
+                game.font.draw(game.batch, "REWARDS PHASE", (int) (0.45 * width), (int) (0.9 * height));
+                break;
+
+            default:
+                game.font.draw(game.batch, "ERROR - Cannot Determine Phase", (int) (0.45 * width), (int) (0.9 * height));
+                break;
+        }
+
+        game.batch.end();
+    }
+
+    /**
      * Draw a grid of squares to represent the Denkimon on the battlefield
      * There will be an additional square where the player will be located
-     *
      * NOTE: game.shape.rect() draws rectangles using the point at the lower left of the square
      */
     private void drawBattlefield() {
 
+        // TODO: Draw a background
+
         double width = DenkimonGame.VIEWPORT_WIDTH;
         double height = DenkimonGame.VIEWPORT_HEIGHT;
+
+        game.batch.setProjectionMatrix(camera.combined);
+        game.batch.begin();
 
         game.shape.begin(ShapeRenderer.ShapeType.Line);
         game.shape.setColor(Color.GRAY);
@@ -164,15 +205,16 @@ public class BattleScreen implements Screen {
         // 32 squares total, 16 per player
         // side-length = 0.10w
         // TODO: Add padding b/w both player's sides and add padding b/w cells
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < GRID_WIDTH; i++) {
+            for (int j = 0; j < GRID_HEIGHT; j++) {
                 game.shape.rect((float)(0.10 * width + 0.1 * width * i), (float) (0.05 * height + 0.1 * width * j),
                         (float) (0.1 * width), (float) (0.1 * width));
             }
         }
 
         game.shape.end();
-    }
 
+        game.batch.end();
+    }
 
 }
