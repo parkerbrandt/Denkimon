@@ -25,7 +25,7 @@ public class BattleScreen implements Screen {
     // Enumerations
     private enum BATTLE_PHASE {
         START,
-        PLACEMENT,
+        PLANNING,
         FIGHT,
         REWARDS
     };
@@ -50,6 +50,9 @@ public class BattleScreen implements Screen {
 
     public BattleScreen(final DenkimonGame game) {
         this.game = game;
+
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);
     }
 
     public BattleScreen(final DenkimonGame game, Player bluePlayer, Player redPlayer) {
@@ -89,14 +92,14 @@ public class BattleScreen implements Screen {
         drawBattlefield();
 
         // TODO: Render each of the Blue Player's Denkimon
-        for (Denkimon denkimon : bluePlayer.getDenkimon()) {
-
-        }
-
-        // TODO: Render each of the Red Player's Denkimon
-        for (Denkimon denkimon : redPlayer.getDenkimon()) {
-
-        }
+//        for (Denkimon denkimon : bluePlayer.getDenkimon()) {
+//
+//        }
+//
+//        // TODO: Render each of the Red Player's Denkimon
+//        for (Denkimon denkimon : redPlayer.getDenkimon()) {
+//
+//        }
 
         game.batch.end();
     }
@@ -133,20 +136,38 @@ public class BattleScreen implements Screen {
 
     /**
      * Draw a grid of squares to represent the Denkimon on the battlefield
+     * There will be an additional square where the player will be located
+     *
+     * NOTE: game.shape.rect() draws rectangles using the point at the lower left of the square
      */
     private void drawBattlefield() {
 
-        // Divide the viewport area into a grid
-        float square_width = (float) DenkimonGame.VIEWPORT_WIDTH / GRID_WIDTH;
-        float square_height = (float) DenkimonGame.VIEWPORT_HEIGHT / GRID_HEIGHT;
+        double width = DenkimonGame.VIEWPORT_WIDTH;
+        double height = DenkimonGame.VIEWPORT_HEIGHT;
 
         game.shape.begin(ShapeRenderer.ShapeType.Line);
         game.shape.setColor(Color.GRAY);
 
-        // TODO: Draw a grid of squares for the battlefield
-        for(int i = 0; i < GRID_WIDTH; i++) {
-            for (int j = 0; j < GRID_HEIGHT; j++) {
-                game.shape.rect(i * square_width / 2, j * square_height / 2, square_width, square_height);
+        // Draw each player's square
+
+        // Player 1 square
+        // Bottom-left Point at (0.025w, 0.45h), side-length = 0.50w
+        game.shape.rect((float) (0.025 * width), (float) (0.45 * height),
+                (float) (0.05 * width), (float) (0.05 * width));
+
+        // Player 2 square
+        // Bottom-left Point at (w - 0.075w, 0.45h), side-length = 0.50w
+        game.shape.rect((float) (width - 0.075 * width), (float) (0.45 * height),
+                (float) (0.05 * width), (float) (0.05 * width));
+
+        // Draw all the squares on the battlefield
+        // 32 squares total, 16 per player
+        // side-length = 0.10w
+        // TODO: Add padding b/w both player's sides and add padding b/w cells
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 4; j++) {
+                game.shape.rect((float)(0.10 * width + 0.1 * width * i), (float) (0.05 * height + 0.1 * width * j),
+                        (float) (0.1 * width), (float) (0.1 * width));
             }
         }
 
