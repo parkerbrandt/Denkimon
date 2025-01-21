@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lucentus.denkimon.DenkimonGame;
+import com.lucentus.denkimon.battle.field.Battlefield;
+import com.lucentus.denkimon.battle.field.BattlefieldSquare;
 import com.lucentus.denkimon.entities.Denkimon;
 import com.lucentus.denkimon.users.Player;
 
@@ -19,7 +21,7 @@ import com.lucentus.denkimon.users.Player;
 public class BattleScreen implements Screen {
 
     // Static Properties
-    public static final int GRID_WIDTH = 8;
+    public static final int GRID_WIDTH = 4;
     public static final int GRID_HEIGHT = 4;
 
     // Enumerations
@@ -44,29 +46,91 @@ public class BattleScreen implements Screen {
     private String redPlayerName = "Red";
     private int redPlayerScore = 0;
 
-    private BATTLE_PHASE currentPhase = BATTLE_PHASE.PLANNING;
+    private Battlefield battlefield;
 
-    private Denkimon[][] battleField = new Denkimon[5][5];
+    private BATTLE_PHASE currentPhase = BATTLE_PHASE.PLANNING;
 
 
     /*
      * Constructors
      */
 
+    /**
+     * TODO: TEST CONSTRUCTOR
+     * Constructor to use before different player functionality is implemented
+     */
     public BattleScreen(final DenkimonGame game) {
         this.game = game;
+        this.battlefield = new Battlefield(game);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);
+
+        // Determine locations for the battlefield grids
+        // 32 squares total, 16 per player
+        // side-length = 0.10w
+        double width = DenkimonGame.VIEWPORT_WIDTH;
+        double height = DenkimonGame.VIEWPORT_HEIGHT;
+
+        // Blue Side
+        for (int i = 0; i < GRID_WIDTH; i++) {
+            for (int j = 0; j < GRID_HEIGHT; j++) {
+                float x = (float) (0.10 * width + 0.1 * width * i);
+                float y = (float) (0.05 * height + 0.1 * width * j);
+
+                BattlefieldSquare square = new BattlefieldSquare(i, j, x, y, true);
+                battlefield.addSquare(square);
+            }
+        }
+
+        // Red Side
+        for (int i = 0; i < GRID_WIDTH; i++) {
+            for (int j = 0; j < GRID_HEIGHT; j++) {
+                float x = (float) (0.515 * width + 0.1 * width * i);
+                float y = (float) (0.05 * height + 0.1 * width * j);
+
+                BattlefieldSquare square = new BattlefieldSquare(i, j, x, y, false);
+                battlefield.addSquare(square);
+            }
+        }
     }
 
     public BattleScreen(final DenkimonGame game, Player bluePlayer, Player redPlayer) {
         this.game = game;
+        this.battlefield = new Battlefield(game);
         this.bluePlayer = bluePlayer;
         this.redPlayer = redPlayer;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);
+
+        // Determine locations for the battlefield grids
+        // 32 squares total, 16 per player
+        // side-length = 0.10w
+        double width = DenkimonGame.VIEWPORT_WIDTH;
+        double height = DenkimonGame.VIEWPORT_HEIGHT;
+
+        // Blue Side
+        for (int i = 0; i < GRID_WIDTH; i++) {
+            for (int j = 0; j < GRID_HEIGHT; j++) {
+                float x = (float) (0.10 * width + 0.1 * width * i);
+                float y = (float) (0.05 * height + 0.1 * width * j);
+
+                BattlefieldSquare square = new BattlefieldSquare(i, j, x, y, true);
+                battlefield.addSquare(square);
+            }
+        }
+
+        // Red Side
+        for (int i = 0; i < GRID_WIDTH; i++) {
+            for (int j = 0; j < GRID_HEIGHT; j++) {
+                float x = (float) (0.525 * width + 0.1 * width * i);
+                float y = (float) (0.05 * height + 0.1 * width * j);
+
+                BattlefieldSquare square = new BattlefieldSquare(i, j, x, y, false);
+                battlefield.addSquare(square);
+            }
+        }
     }
 
 
@@ -142,29 +206,35 @@ public class BattleScreen implements Screen {
 
         // Write each player's score above their side
         game.font.draw(game.batch, bluePlayerName + "'s Score: " + bluePlayerScore, (int) (0.1 * width), (int) (0.9 * height));
-        game.font.draw(game.batch, redPlayerName + "'s Score: " + redPlayerScore, (int) (width - 0.1 * width), (int) (0.9 * height));
+        game.font.draw(game.batch, redPlayerName + "'s Score: " + redPlayerScore, (int) (width - (0.1 * width + redPlayerName.length() + 8)), (int) (0.9 * height));
 
         // Write the current phase at the top of the screen
+        String displayStr;
+
         switch (currentPhase) {
             case START:
-                game.font.draw(game.batch, "GAME START", (int) (0.45 * width), (int) (0.9 * height));
+                displayStr = "GAME START";
+                game.font.draw(game.batch, displayStr, (int) (0.45 * width - displayStr.length()), (int) (0.9 * height));
                 break;
 
             case PLANNING:
-                String displayStr = "PLANNING PHASE";
+                displayStr = "PLANNING PHASE";
                 game.font.draw(game.batch, displayStr, (int) (0.5 * width - displayStr.length()), (int) (0.9 * height));
                 break;
 
             case FIGHT:
-                game.font.draw(game.batch, "BATTLE PHASE", (int) (0.45 * width), (int) (0.9 * height));
+                displayStr = "FIGHT!!";
+                game.font.draw(game.batch, displayStr, (int) (0.5 * width - displayStr.length()), (int) (0.9 * height));
                 break;
 
             case REWARDS:
-                game.font.draw(game.batch, "REWARDS PHASE", (int) (0.45 * width), (int) (0.9 * height));
+                displayStr = "REWARDS";
+                game.font.draw(game.batch, displayStr, (int) (0.5 * width - displayStr.length()), (int) (0.9 * height));
                 break;
 
             default:
-                game.font.draw(game.batch, "ERROR - Cannot Determine Phase", (int) (0.45 * width), (int) (0.9 * height));
+                displayStr = "ERROR - Cannot Determine Phase";
+                game.font.draw(game.batch, displayStr, (int) (0.5 * width - displayStr.length()), (int) (0.9 * height));
                 break;
         }
 
@@ -192,7 +262,7 @@ public class BattleScreen implements Screen {
         // Draw each player's square
 
         // Player 1 square
-        // Bottom-left Point at (0.025w, 0.45h), side-length = 0.50w
+        // Bottom-left Point at (0.025w, 0.45h), side-length = 0.05w
         game.shape.rect((float) (0.025 * width), (float) (0.45 * height),
                 (float) (0.05 * width), (float) (0.05 * width));
 
@@ -201,16 +271,9 @@ public class BattleScreen implements Screen {
         game.shape.rect((float) (width - 0.075 * width), (float) (0.45 * height),
                 (float) (0.05 * width), (float) (0.05 * width));
 
-        // Draw all the squares on the battlefield
-        // 32 squares total, 16 per player
-        // side-length = 0.10w
-        // TODO: Add padding b/w both player's sides and add padding b/w cells
-        for (int i = 0; i < GRID_WIDTH; i++) {
-            for (int j = 0; j < GRID_HEIGHT; j++) {
-                game.shape.rect((float)(0.10 * width + 0.1 * width * i), (float) (0.05 * height + 0.1 * width * j),
-                        (float) (0.1 * width), (float) (0.1 * width));
-            }
-        }
+
+        // Draw the battlefield
+        battlefield.draw();
 
         game.shape.end();
 
