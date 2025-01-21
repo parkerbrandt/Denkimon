@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.lucentus.denkimon.DenkimonGame;
+import com.lucentus.denkimon.users.Player;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -26,6 +27,8 @@ public class HomeScreen implements Screen {
     // Properties
     private final DenkimonGame game;
     private OrthographicCamera camera;
+
+    private Player player;
 
     // Socket Properties
     private Socket socket;
@@ -46,8 +49,14 @@ public class HomeScreen implements Screen {
      * Constructors
      */
 
-    public HomeScreen(final DenkimonGame game) throws IOException {
+    public HomeScreen(final DenkimonGame game, Player p) {
         this.game = game;
+
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);
+
+        // Initialize the Player
+        player = p;
 
         // Initialize the main game server connection
         game.gameSocket = new Socket();
@@ -78,7 +87,7 @@ public class HomeScreen implements Screen {
         playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
-                game.setScreen(new BattleScreen(game));
+                game.setScreen(new BattleScreen(game, player));
             }
         });
     }
@@ -96,6 +105,11 @@ public class HomeScreen implements Screen {
     @Override
     public void render(float v) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        camera.update();
+        game.batch.begin();
+        game.font.draw(game.batch, "Hello, " + player.getName(), 100, DenkimonGame.VIEWPORT_HEIGHT - 200);
+        game.batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

@@ -1,8 +1,8 @@
 package com.lucentus.denkimon.users;
 
 import com.lucentus.denkimon.entities.Denkimon;
-
 import java.util.ArrayList;
+
 
 /**
  * Class to represent each User/Player
@@ -15,6 +15,7 @@ public class Player {
      */
     private String name;
     private String userID;
+    private boolean blueside = true;
 
     private ArrayList<Denkimon> denkimon = new ArrayList<>();
 
@@ -23,7 +24,7 @@ public class Player {
      * Constructors
      */
     public Player() {
-
+        // TODO: Generate a random user id
     }
 
 
@@ -35,7 +36,15 @@ public class Player {
         return this.name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public ArrayList<Denkimon> getDenkimon() {
         return this.denkimon;
+    }
+
+    public void setDenkimon(ArrayList<Denkimon> newDenkimon) {
+        this.denkimon = newDenkimon;
     }
 }

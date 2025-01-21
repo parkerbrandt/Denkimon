@@ -38,6 +38,8 @@ public class BattleScreen implements Screen {
     private OrthographicCamera camera;
     private float stateTime;
 
+    private Player player;
+
     private Player bluePlayer;
     private String bluePlayerName = "Blue";
     private int bluePlayerScore = 0;
@@ -56,50 +58,12 @@ public class BattleScreen implements Screen {
      */
 
     /**
-     * TODO: TEST CONSTRUCTOR
-     * Constructor to use before different player functionality is implemented
+     * Initializes the Battle and Battlefield for two Players
      */
-    public BattleScreen(final DenkimonGame game) {
+    public BattleScreen(final DenkimonGame game, Player player) {
         this.game = game;
         this.battlefield = new Battlefield(game);
-
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);
-
-        // Determine locations for the battlefield grids
-        // 32 squares total, 16 per player
-        // side-length = 0.10w
-        double width = DenkimonGame.VIEWPORT_WIDTH;
-        double height = DenkimonGame.VIEWPORT_HEIGHT;
-
-        // Blue Side
-        for (int i = 0; i < GRID_WIDTH; i++) {
-            for (int j = 0; j < GRID_HEIGHT; j++) {
-                float x = (float) (0.10 * width + 0.1 * width * i);
-                float y = (float) (0.05 * height + 0.1 * width * j);
-
-                BattlefieldSquare square = new BattlefieldSquare(i, j, x, y, true);
-                battlefield.addSquare(square);
-            }
-        }
-
-        // Red Side
-        for (int i = 0; i < GRID_WIDTH; i++) {
-            for (int j = 0; j < GRID_HEIGHT; j++) {
-                float x = (float) (0.515 * width + 0.1 * width * i);
-                float y = (float) (0.05 * height + 0.1 * width * j);
-
-                BattlefieldSquare square = new BattlefieldSquare(i, j, x, y, false);
-                battlefield.addSquare(square);
-            }
-        }
-    }
-
-    public BattleScreen(final DenkimonGame game, Player bluePlayer, Player redPlayer) {
-        this.game = game;
-        this.battlefield = new Battlefield(game);
-        this.bluePlayer = bluePlayer;
-        this.redPlayer = redPlayer;
+        this.player = player;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);

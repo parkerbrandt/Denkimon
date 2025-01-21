@@ -12,8 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lucentus.denkimon.DenkimonGame;
-
+import com.lucentus.denkimon.users.Player;
 import java.net.Socket;
+
 
 /**
  * The Main Title Screen for the Denkimon game
@@ -24,6 +25,8 @@ public class TitleScreen implements Screen {
     // Properties
     private final DenkimonGame game;
     private OrthographicCamera camera;
+
+    private Player player;
 
     // Socket Properties
     private Socket loginSocket;
@@ -56,6 +59,9 @@ public class TitleScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);
+
+        // Initialize the Player
+        player = new Player();
 
         // Initialize Scene2d UI components
         stage = new Stage();
@@ -99,6 +105,8 @@ public class TitleScreen implements Screen {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 // TODO: Currently just sets player's username
+                player.setName(usernameField.getText());
+                game.setScreen(new HomeScreen(game, player));
             }
         });
 
@@ -109,6 +117,8 @@ public class TitleScreen implements Screen {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 // TODO: Currently just sets player's username
+                player.setName(usernameField.getText());
+                game.setScreen(new HomeScreen(game, player));
             }
         });
     }
@@ -128,7 +138,6 @@ public class TitleScreen implements Screen {
         camera.update();
         game.batch.begin();
         game.font.draw(game.batch, "DENKIMON", 100, DenkimonGame.VIEWPORT_HEIGHT - 200);
-        game.font.draw(game.batch, "Touch Anywhere to Begin", 100, DenkimonGame.VIEWPORT_HEIGHT - 300);
         game.batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
