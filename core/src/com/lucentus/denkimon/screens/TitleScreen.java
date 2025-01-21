@@ -3,8 +3,17 @@ package com.lucentus.denkimon.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lucentus.denkimon.DenkimonGame;
+
+import java.net.Socket;
 
 /**
  * The Main Title Screen for the Denkimon game
@@ -15,6 +24,24 @@ public class TitleScreen implements Screen {
     // Properties
     private final DenkimonGame game;
     private OrthographicCamera camera;
+
+    // Socket Properties
+    private Socket loginSocket;
+
+    // UI Properties
+    private final Skin skin;
+    private final Stage stage;
+    private final Table table;
+    private final Table buttonTable;
+
+    private final Label usernameLabel;
+    private final TextField usernameField;
+    private final Label passwordLabel;
+    private final TextField passwordField;
+
+    private final TextButton loginButton;
+    private final TextButton registerButton;
+
 
     /*
      * Constructors
@@ -29,6 +56,61 @@ public class TitleScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);
+
+        // Initialize Scene2d UI components
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+
+        table = new Table();
+        stage.addActor(table);
+        table.setSize(DenkimonGame.VIEWPORT_WIDTH, DenkimonGame.VIEWPORT_HEIGHT);
+        table.align(Align.center);
+        table.setDebug(true);
+
+        // Initialize skin components
+        skin = new Skin(Gdx.files.internal("assets/skins/beta/uiskin.json"));
+
+        // Add text boxes for username and password input
+        usernameLabel = new Label("Username: ", skin);
+        usernameField = new TextField("", skin);
+
+        passwordLabel = new Label("Password: ", skin);
+        passwordField = new TextField("", skin);
+
+        TextureRegion upRegion = skin.getRegion("default-slider-knob");
+        TextureRegion downRegion = skin.getRegion("default-slider-knob");
+        BitmapFont buttonFont = skin.getFont("default-font");
+
+        table.add(usernameLabel);
+        table.add(usernameField);
+        table.add(passwordLabel);
+        table.add(passwordField);
+
+        // Add buttons
+        buttonTable = new Table();
+        stage.addActor(buttonTable);
+        buttonTable.setFillParent(true);
+        buttonTable.bottom();
+
+        // Log-In Button
+        loginButton = new TextButton("Log In", skin);
+        buttonTable.add(loginButton);
+        loginButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                // TODO: Currently just sets player's username
+            }
+        });
+
+        // Register Button
+        registerButton = new TextButton("Register", skin);
+        buttonTable.add(registerButton);
+        registerButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                // TODO: Currently just sets player's username
+            }
+        });
     }
 
 
@@ -49,17 +131,13 @@ public class TitleScreen implements Screen {
         game.font.draw(game.batch, "Touch Anywhere to Begin", 100, DenkimonGame.VIEWPORT_HEIGHT - 300);
         game.batch.end();
 
-        // Once the title screen is interacted with, go to the Log In Screen
-        // TODO: Switch back to login screen once battle screen is completed
-        if (Gdx.input.isTouched()) {
-            game.setScreen(new BattleScreen(game));
-            dispose();
-        }
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
     }
 
     @Override
-    public void resize(int i, int i1) {
-
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -79,6 +157,7 @@ public class TitleScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
+        skin.dispose();
     }
 }
