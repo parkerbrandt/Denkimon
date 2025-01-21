@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lucentus.denkimon.DenkimonGame;
+import com.lucentus.denkimon.entities.Denkimon;
 import com.lucentus.denkimon.users.Player;
 import java.net.Socket;
 
@@ -62,6 +63,9 @@ public class TitleScreen implements Screen {
 
         // Initialize the Player
         player = new Player();
+
+        // TODO: Early Testing - Give player a FireAnt Denkimon
+        Denkimon fireant = new Denkimon(game, "FireAnt");
 
         // Initialize Scene2d UI components
         stage = new Stage();

@@ -2,6 +2,7 @@ package com.lucentus.denkimon.entities;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,13 +29,15 @@ public abstract class Entity {
     /*
      * Abstract Methods
      */
-    public abstract void render();
+    public abstract void render(OrthographicCamera camera, float time);
 
     public abstract void onAttack();
 
     public abstract void onHit();
 
     public abstract void onMove();
+
+    public abstract void dispose();
 
 
     /*

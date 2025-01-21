@@ -1,0 +1,2 @@
+Name,IdleSheetRows,IdleSheetCols,BaseHP,HP/Level,AttackDamage,AD/Level,MagicPower,MP/Level,AttackResist,AR/Level,MagicResist,MR/Level,MoveSpeed,Range,Type,Offense
+FireAnt,1,6,100,15,30,5,5,0,12,1.5,15,1,100,25,Fire,Class
