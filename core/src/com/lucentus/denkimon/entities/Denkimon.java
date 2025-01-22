@@ -69,15 +69,17 @@ public class Denkimon extends Entity {
 
     private Player owner;
 
-    private TYPE type =             TYPE.BLANK;
-    private CLASS denkiClass =      CLASS.OFFENSE;
-    private STATUS currentStatus =  STATUS.ALIVE;
+    private TYPE    type =           TYPE.BLANK;
+    private CLASS   denkiClass =     CLASS.OFFENSE;
+    private STATUS  currentStatus =  STATUS.ALIVE;
 
     private ArrayList<Skill> skills = new ArrayList<>();
 
-    private int level = 1;
-
     private double attackTimer = 0;
+
+    private int level = 1;
+    private int expToNextLevel;
+    private int currentExp;
 
     private double maxHealthPoints;
     private double currentHealthPoints;
@@ -107,13 +109,29 @@ public class Denkimon extends Entity {
     private String currentAnimationName;
 
     private Animation<TextureRegion> idleAnimation;
-
     private String idleSheet = "";
     private int idleCols = 0;
     private int idleRows = 0;
 
     private Animation<TextureRegion> moveAnimation;
+    private String moveSheet = "";
+    private int moveCols = 0;
+    private int moveRows = 0;
+
     private Animation<TextureRegion> attackAnimation;
+    private String attackSheet = "";
+    private int atkCols = 0;
+    private int atkRows = 0;
+
+    private Animation<TextureRegion> skill1Animation;
+    private String skill1Sheet = "";
+    private int skill1Cols = 0;
+    private int skill1Rows = 0;
+
+    private Animation<TextureRegion> skill2Animation;
+    private String skill2Sheet = "";
+    private int skill2Cols = 0;
+    private int skill2Rows = 0;
 
 
     /*
@@ -122,6 +140,7 @@ public class Denkimon extends Entity {
 
     /**
      * Initialize all information about the Denkimon including stats and animations
+     * @param player the Player owner of this Denkimon
      * @param name the name of the Denkimon
      */
     public Denkimon(final DenkimonGame game, Player player, String name) {
@@ -345,20 +364,28 @@ public class Denkimon extends Entity {
      * Getters & Setters
      */
 
-    public TextureRegion getCurrentFrame(float time) {
-        return currentAnimation.getKeyFrame(time, true);
+    public String getName() {
+        return this.name;
     }
 
     public Player getOwner() {
         return this.owner;
     }
 
-    public void setOwner(Player player) {
-        this.owner = player;
+    public Denkimon.TYPE getType() {
+        return this.type;
+    }
+
+    public Denkimon.CLASS getDenkiClass() {
+        return this.denkiClass;
     }
 
     public Denkimon.STATUS getStatus() {
         return this.currentStatus;
+    }
+
+    public int getLevel() {
+        return this.level;
     }
 
     public double getMaxHealthPoints() {
@@ -367,5 +394,13 @@ public class Denkimon extends Entity {
 
     public double getCurrentHealthPoints() {
         return currentHealthPoints;
+    }
+
+    public void addToHealthPoints(int delta) {
+        this.currentHealthPoints += delta;
+    }
+
+    public TextureRegion getCurrentFrame(float time) {
+        return currentAnimation.getKeyFrame(time, true);
     }
 }

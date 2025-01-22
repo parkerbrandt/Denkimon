@@ -37,6 +37,8 @@ public abstract class Entity {
 
     public abstract void onMove();
 
+    public abstract void onIdle();
+
     public abstract void dispose();
 
 
