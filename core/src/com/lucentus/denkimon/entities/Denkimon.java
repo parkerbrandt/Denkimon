@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.lucentus.denkimon.DenkimonGame;
-
+import com.lucentus.denkimon.entities.abilities.Skill;
+import com.lucentus.denkimon.users.Player;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 
 /**
@@ -19,7 +21,10 @@ public class Denkimon extends Entity {
     /*
      * Class Properties
      */
-    public static final double MAX_DENKIMON_SIZE = 0.09;     // The max Denkimon sprite size as a percentage of screen width
+    public static final double  MAX_DENKIMON_SIZE = 0.09;       // The max Denkimon sprite size as a percentage of screen width
+    public static final int     DENKIMON_SPRITE_SIZE = 64;      // The height and width of the sprite of each denkimon
+
+    private static final String DENKIMON_STAT_FILE = "assets/game_assets/stats/denkimon_stats.csv";
 
 
     /**
@@ -55,12 +60,6 @@ public class Denkimon extends Entity {
 
 
     /*
-     * Static Properties
-     */
-    private static final String DENKIMON_STAT_FILE = "assets/game_assets/stats/denkimon_stats.csv";
-
-
-    /*
      * Properties
      */
     private final DenkimonGame game;
@@ -68,17 +67,25 @@ public class Denkimon extends Entity {
     // Stat Properties
     private String name;
 
+    private Player owner;
+
     private TYPE type =             TYPE.BLANK;
     private CLASS denkiClass =      CLASS.OFFENSE;
     private STATUS currentStatus =  STATUS.ALIVE;
 
-    boolean blueside = true;
+    private ArrayList<Skill> skills = new ArrayList<>();
 
     private int level = 1;
+
+    private double attackTimer = 0;
 
     private double maxHealthPoints;
     private double currentHealthPoints;
     private double hpPerLevel;
+
+    private double maxEnergy;
+    private double currentEnergy;
+    private double energyPerHit;
 
     private double atkDamage;
     private double adPerLevel;
@@ -117,7 +124,7 @@ public class Denkimon extends Entity {
      * Initialize all information about the Denkimon including stats and animations
      * @param name the name of the Denkimon
      */
-    public Denkimon(final DenkimonGame game, String name) {
+    public Denkimon(final DenkimonGame game, Player player, String name) {
 
         // Call super constructor
         super();
@@ -125,6 +132,7 @@ public class Denkimon extends Entity {
         // Initialize variables
         this.game = game;
         this.name = name;
+        this.owner = player;
 
         // Load all stats from the CSV file
         loadDenkimonInfo(name);
@@ -280,12 +288,28 @@ public class Denkimon extends Entity {
      * Override Methods
      */
 
+    /**
+     * Render the Denkimon at its position on the battlefield
+     */
     @Override
     public void render(OrthographicCamera camera, float time) {
         game.batch.begin();
 
-        boolean flip = !blueside;
+        boolean flip = !owner.isBlueside();
         // game.batch.draw(getCurrentFrame(time));
+
+        game.batch.end();
+    }
+
+    /**
+     * Alternate method for rendering if the Denkimon needs to be drawn at a specific position
+     * Used for display not on battlefield (i.e. on party selection screen, home screen, etc.)
+     */
+    public void render(OrthographicCamera camera, float time, float x, float y) {
+        game.batch.begin();
+
+        boolean flip = !owner.isBlueside();
+        game.batch.draw(this.getCurrentFrame(time), x, y);
 
         game.batch.end();
     }
@@ -306,6 +330,12 @@ public class Denkimon extends Entity {
     }
 
     @Override
+    public void onIdle() {
+        this.currentAnimation = idleAnimation;
+        this.currentAnimationName = "idle";
+    }
+
+    @Override
     public void dispose() {
 
     }
@@ -314,11 +344,28 @@ public class Denkimon extends Entity {
     /*
      * Getters & Setters
      */
+
     public TextureRegion getCurrentFrame(float time) {
         return currentAnimation.getKeyFrame(time, true);
     }
 
+    public Player getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(Player player) {
+        this.owner = player;
+    }
+
     public Denkimon.STATUS getStatus() {
         return this.currentStatus;
+    }
+
+    public double getMaxHealthPoints() {
+        return maxHealthPoints;
+    }
+
+    public double getCurrentHealthPoints() {
+        return currentHealthPoints;
     }
 }
