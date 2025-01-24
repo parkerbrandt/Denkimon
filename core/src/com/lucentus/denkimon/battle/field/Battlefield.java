@@ -1,6 +1,8 @@
 package com.lucentus.denkimon.battle.field;
 
 import com.lucentus.denkimon.DenkimonGame;
+import com.lucentus.denkimon.screens.BattleScreen;
+import com.lucentus.denkimon.users.Player;
 
 import java.util.ArrayList;
 
@@ -42,14 +44,32 @@ public class Battlefield {
 
     /**
      * Draw all the squares in the grid
+     * Will always draw the player's side of the field,
+     * but will only display enemy's once planning phase is over
      */
-    public void draw() {
+    public void draw(Player player, BattleScreen.BATTLE_PHASE phase) {
         // Draw the blue-side grid
-        for (BattlefieldSquare square : bluePlayerField)
-            square.draw(game);
+        if (player.isBlueside() || phase != BattleScreen.BATTLE_PHASE.PLANNING) {
+            for (BattlefieldSquare square : bluePlayerField)
+                square.draw(game);
+        }
 
         // Draw the red-side grid
-        for (BattlefieldSquare square : redPlayerField)
-            square.draw(game);
+        if (!player.isBlueside() || phase != BattleScreen.BATTLE_PHASE.PLANNING) {
+            for (BattlefieldSquare square : redPlayerField)
+                square.draw(game);
+        }
+    }
+
+
+    /*
+     * Getters & Setters
+     */
+    public ArrayList<BattlefieldSquare> getBluePlayerField() {
+        return this.bluePlayerField;
+    }
+
+    public ArrayList<BattlefieldSquare> getRedPlayerField() {
+        return this.redPlayerField;
     }
 }

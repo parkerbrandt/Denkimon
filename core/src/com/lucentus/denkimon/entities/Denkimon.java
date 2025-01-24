@@ -162,6 +162,8 @@ public class Denkimon extends Entity {
         this.name = name;
         this.owner = player;
 
+        this.hitbox = new Rectangle(0, 0, DENKIMON_SPRITE_SIZE, DENKIMON_SPRITE_SIZE);
+
         // Load all stats from the CSV file
         loadDenkimonInfo(name);
 
