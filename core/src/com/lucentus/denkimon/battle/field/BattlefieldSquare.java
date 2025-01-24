@@ -1,5 +1,6 @@
 package com.lucentus.denkimon.battle.field;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.lucentus.denkimon.DenkimonGame;
 import com.lucentus.denkimon.entities.Denkimon;
 
@@ -8,6 +9,11 @@ import com.lucentus.denkimon.entities.Denkimon;
  * Class to represent each square in the Battlefield Grids
  */
 public class BattlefieldSquare {
+
+    /*
+     * Static Properties
+     */
+    public static final float WIDTH = (float) (0.1 * DenkimonGame.VIEWPORT_WIDTH);
 
     /*
      * Properties
@@ -20,6 +26,8 @@ public class BattlefieldSquare {
 
     private boolean blueSide;
     private Denkimon denkimon = null;
+
+    private Rectangle hitbox;
 
 
     /*
@@ -43,6 +51,7 @@ public class BattlefieldSquare {
         this.yPx = y;
         this.blueSide = blueSide;
 
+        this.hitbox = new Rectangle(x, y, WIDTH, WIDTH);
     }
 
 
@@ -55,9 +64,7 @@ public class BattlefieldSquare {
      * @param game the current game being played
      */
     public void draw(final DenkimonGame game) {
-        float width = DenkimonGame.VIEWPORT_WIDTH;
-
-        game.shape.rect(xPx, yPx, (float) (0.1 * width), (float) (0.1 * width));
+        game.shape.rect(xPx, yPx, WIDTH, WIDTH);
     }
 
 
@@ -71,5 +78,9 @@ public class BattlefieldSquare {
 
     public void setDenkimon(Denkimon denkimon) {
         this.denkimon = denkimon;
+    }
+
+    public Rectangle getHitbox() {
+        return this.hitbox;
     }
 }

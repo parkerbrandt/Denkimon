@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.lucentus.denkimon.DenkimonGame;
 import com.lucentus.denkimon.entities.abilities.Skill;
 import com.lucentus.denkimon.users.Player;
@@ -23,6 +24,7 @@ public class Denkimon extends Entity {
      */
     public static final double  MAX_DENKIMON_SIZE = 0.09;       // The max Denkimon sprite size as a percentage of screen width
     public static final int     DENKIMON_SPRITE_SIZE = 64;      // The height and width of the sprite of each denkimon
+    public static final float   SPRITE_SCALE = DenkimonGame.VIEWPORT_WIDTH * 0.1f;
 
     private static final String DENKIMON_STAT_FILE = "assets/game_assets/stats/denkimon_stats.csv";
 
@@ -66,6 +68,8 @@ public class Denkimon extends Entity {
 
     // Stat Properties
     private String name;
+
+    private Rectangle hitbox;
 
     private Player owner;
 
@@ -132,6 +136,11 @@ public class Denkimon extends Entity {
     private String skill2Sheet = "";
     private int skill2Cols = 0;
     private int skill2Rows = 0;
+
+    private Animation<TextureRegion> hurtAnimation;
+    private String hurtSheet = "";
+    private int hurtCols = 0;
+    private int hurtRows = 0;
 
 
     /*
@@ -309,6 +318,7 @@ public class Denkimon extends Entity {
 
     /**
      * Render the Denkimon at its position on the battlefield
+     * NOTE: The x and y positions will be determined automatically
      */
     @Override
     public void render(OrthographicCamera camera, float time) {
@@ -331,6 +341,10 @@ public class Denkimon extends Entity {
         game.batch.draw(this.getCurrentFrame(time), x, y);
 
         game.batch.end();
+
+        // Update hitbox with new x and y positions
+        this.hitbox.x = x;
+        this.hitbox.y = y;
     }
 
     @Override
@@ -366,6 +380,10 @@ public class Denkimon extends Entity {
 
     public String getName() {
         return this.name;
+    }
+
+    public Rectangle getHitbox() {
+        return this.hitbox;
     }
 
     public Player getOwner() {
